@@ -4,16 +4,17 @@
     # erpm (electrical rpm) = speed_to_erpm_gain * speed (meters / second) + speed_to_erpm_offset
     # speed_to_erpm_gain: 4800.0 #4800.0 3100.0
     # speed_to_erpm_gain: 2937.0
-    speed_to_erpm_gain: 4186.99 # 4186.99
-    speed_to_erpm_offset: 1.0
+    speed_to_erpm_gain: 4090.09 # 4186.99 3806.35
+    speed_to_erpm_offset: 0.0
 
     # servo value (0 to 1) =  steering_angle_to_servo_gain * steering angle (radians) + steering_angle_to_servo_offset
-    steering_angle_to_servo_gain_left: -0.90743 # 0.4089 rad -> 0.01
-    steering_angle_to_servo_gain_right: -1.48923 # 0.4089 rad -> 0.99
+    steering_angle_to_servo_gain_left: -0.9555
+    steering_angle_to_servo_gain_right: -1.1454
     steering_angle_to_servo_gain: -1.0
-    steering_angle_to_servo_offset: 0.38105
+    steering_angle_to_servo_offset: 0.5235
     # R=66.25
-    # steer = 0.46845
+    # steer = 0.3742
+
 
     port: /dev/ttyMOTOR
     duty_cycle_min: 0.0

@@ -19,15 +19,14 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
-from launch_ros.substitutions import FindPackageShare
+
 from launch import LaunchDescription
 from launch_ros.actions import Node
 from launch.substitutions import Command
-from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
+from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
 from launch.actions import IncludeLaunchDescription
 from launch_xml.launch_description_sources import XMLLaunchDescriptionSource
-from launch.launch_description_sources import PythonLaunchDescriptionSource
 from ament_index_python.packages import get_package_share_directory
 import os
 
@@ -108,20 +107,11 @@ def generate_launch_description():
         name='throttle_interpolator',
         parameters=[LaunchConfiguration('vesc_config')]
     )
-    # urg_node = Node(
-    #     package='urg_node',
-    #     executable='urg_node_driver',
-    #     name='urg_node',
-    #     parameters=[LaunchConfiguration('sensors_config')]
-    # )
-    urg_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('urg_node2'),
-                'launch',
-                'urg_node2.launch.py'
-            ])
-        ])
+    urg_node = Node(
+        package='urg_node',
+        executable='urg_node_driver',
+        name='urg_node',
+        parameters=[LaunchConfiguration('sensors_config')]
     )
     ackermann_mux_node = Node(
         package='ackermann_mux',
@@ -138,14 +128,14 @@ def generate_launch_description():
     )
 
     # finalize
-    ld.add_action(joy_node)
-    ld.add_action(joy_teleop_node)
-    ld.add_action(ackermann_to_vesc_node)
-    ld.add_action(vesc_to_odom_node)
-    ld.add_action(vesc_driver_node)
+    # ld.add_action(joy_node)
+    # ld.add_action(joy_teleop_node)
+    # ld.add_action(ackermann_to_vesc_node)
+    # ld.add_action(vesc_to_odom_node)
+    # ld.add_action(vesc_driver_node)
     # ld.add_action(throttle_interpolator_node)
     ld.add_action(urg_node)
-    ld.add_action(ackermann_mux_node)
-    ld.add_action(static_tf_node)
+    # ld.add_action(ackermann_mux_node)
+    # ld.add_action(static_tf_node)
 
     return ld

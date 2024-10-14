@@ -4,7 +4,7 @@ ackermann_mux:
       navigation:
         topic   : input_mux/drive
         timeout : 0.2
-        priority: 10
+        priority: 100
       joystick:
         topic   : input_mux/joy
         timeout : 0.2

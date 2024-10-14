@@ -2,13 +2,15 @@
   # general parameters shared by all vesc-related nodes
   ros__parameters:
     # erpm (electrical rpm) = speed_to_erpm_gain * speed (meters / second) + speed_to_erpm_offset
-    speed_to_erpm_gain: 4000.0
+    speed_to_erpm_gain: 4343.0
     speed_to_erpm_offset: 1.0
 
     # servo value (0 to 1) =  steering_angle_to_servo_gain * steering angle (radians) + steering_angle_to_servo_offset
-    steering_angle_to_servo_gain: -0.9273 #-0.8135
-    steering_angle_to_servo_offset: 0.48125
-    # R=68
+    steering_angle_to_servo_gain_left: -1.0097 #-0.9273 #-0.8135 0.473
+    steering_angle_to_servo_gain_right: -1.1250 #-0.9273 #-0.8135 0.437
+    steering_angle_to_servo_offset: 0.473 #0.5
+    # R=66.25
+    # steer = 0.46845
 
     port: /dev/ttyVESC
     duty_cycle_min: 0.0
@@ -21,8 +23,8 @@
     speed_max: 600000.0
     position_min: 0.0
     position_max: 0.0
-    servo_min: 0.09
-    servo_max: 0.88
+    servo_min: 0.0
+    servo_max: 0.91
 
 # No longer needed, all parameters are shared
 # ackermann_to_vesc_node:

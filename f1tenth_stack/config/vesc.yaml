@@ -3,15 +3,16 @@
   ros__parameters:
     # erpm (electrical rpm) = speed_to_erpm_gain * speed (meters / second) + speed_to_erpm_offset
     # speed_to_erpm_gain: 4800.0 #4800.0 3100.0
-    speed_to_erpm_gain: 2937.0
+    # speed_to_erpm_gain: 2937.0
+    speed_to_erpm_gain: 4186.99
     speed_to_erpm_offset: 1.0
 
     # servo value (0 to 1) =  steering_angle_to_servo_gain * steering angle (radians) + steering_angle_to_servo_offset
-    # steering_angle_to_servo_gain_left: -1.0097 #-0.9273 #-0.8135 0.473
-    # steering_angle_to_servo_gain_right: -1.1250 #-0.9273 #-0.8135 0.437
+    steering_angle_to_servo_gain_left: -0.9 #-0.9273 #-0.8135 0.473
+    steering_angle_to_servo_gain_right: -1.0 #-0.9273 #-0.8135 0.437
     steering_angle_to_servo_gain: -1.0
     # steering_angle_to_servo_offset: 0.495 #0.5
-    steering_angle_to_servo_offset: 0.5
+    steering_angle_to_servo_offset: 0.51
     # R=66.25
     # steer = 0.46845
 

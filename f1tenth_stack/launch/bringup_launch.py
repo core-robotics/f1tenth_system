@@ -144,15 +144,15 @@ def generate_launch_description():
         executable='f1tenth_mux',
         name='f1tenth_mux'
     )
-    imu_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource([
-            PathJoinSubstitution([
-                FindPackageShare('microstrain_inertial_driver'),
-                'launch',
-                'microstrain_launch.py'
-            ])
-        ])
-    )
+    # imu_node = IncludeLaunchDescription(
+    #     PythonLaunchDescriptionSource([
+    #         PathJoinSubstitution([
+    #             FindPackageShare('microstrain_inertial_driver'),
+    #             'launch',
+    #             'microstrain_launch.py'
+    #         ])
+    #     ])
+    # )
 
     # finalize
     ld.add_action(joy_node)
@@ -165,6 +165,6 @@ def generate_launch_description():
     ld.add_action(ackermann_mux_node)
     ld.add_action(static_tf_node)
     ld.add_action(f1tenth_mux_node)
-    ld.add_action(imu_node)
+    # ld.add_action(imu_node)
 
     return ld

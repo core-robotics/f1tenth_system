@@ -12,7 +12,8 @@ setup(
         ('share/ament_index/resource_index/packages',
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
-        (os.path.join('share', package_name, 'launch'), glob('launch/*.py')),
+        (os.path.join('share', package_name, 'launch'),
+            glob('launch/*.py') + glob('launch/*.launch')),
         (os.path.join('share', package_name, 'config'), glob('config/*.yaml')),
     ],
     install_requires=['setuptools'],
@@ -25,8 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
             'throttle_interpolator = f1tenth_stack.throttle_interpolator:main',
-            'tf_publisher = f1tenth_stack.tf_publisher:main',
-            'f1tenth_mux = f1tenth_stack.f1tenth_mux:main'
+            'joy_toggle_teleop = f1tenth_stack.joy_toggle_teleop:main',
         ],
     },
 )

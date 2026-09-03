@@ -8,6 +8,8 @@
   <license>MIT</license>
 
   <depend>ackermann_msgs</depend>
+  <depend>rclpy</depend>
+  <depend>sensor_msgs</depend>
   <depend>urg_node</depend>
   <depend>joy</depend>
   <depend>joy_teleop</depend>
@@ -15,6 +17,7 @@
   <depend>vesc</depend>
   <depend>ackermann_mux</depend>
   <depend>std_msgs</depend>
+  <depend>sick_scan_xd</depend>
 
   <test_depend>ament_copyright</test_depend>
   <test_depend>ament_flake8</test_depend>

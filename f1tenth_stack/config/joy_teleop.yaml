@@ -2,40 +2,41 @@ joy:
   ros__parameters:
     # device_name: /dev/input/joypad-f710
     device_id: 0
-    deadzone: 0.01
-    autorepeat_rate: 20.0
-    coalesce_interval: 0.01
+    deadzone: 0.05
+    autorepeat_rate: 100.0
+    coalesce_interval: 0.001
 
 joy_teleop:
   ros__parameters:
-    default:
-      type: topic
-      interface_type: ackermann_msgs/msg/AckermannDriveStamped
-      topic_name: teleop
-      deadman_buttons: [3]
-      axis_mappings:
-        drive-speed:
-          axis: 1
-          scale: 0.0
-          offset: 0.0
-        drive-steering_angle:
-          axis: 2
-          scale: 0.0
-          offset: 0.0
+    # default:
+    #   type: topic
+    #   interface_type: ackermann_msgs/msg/AckermannDriveStamped
+    #   topic_name: teleop
+    #   axis_mappings:
+    #     drive-speed:
+    #       axis: 1
+    #       scale: 0.0
+    #       offset: 0.0
+    #     drive-steering_angle:
+    #       axis: 2
+    #       scale: 0.0
+    #       offset: 0.0
 
     human_control:
       type: topic
       interface_type: ackermann_msgs/msg/AckermannDriveStamped
       topic_name: teleop
-      deadman_buttons: [4]
+      toggle_button: 4 # LB: 한 번 누르면 수동 조작 ON/OFF
+      manual_lock_topic: manual_control
+      manual_lock_publish_rate: 10.0
       axis_mappings:
         drive-speed:
           axis: 1
-          scale: 5.0
+          scale: 5.0 # 최대 속도 [m/s]. 1.5에서 단계적으로 올린 현재 값
           offset: 0.0
         drive-steering_angle:
-          axis: 3
-          scale: 0.3800
+          axis: 2
+          scale: 0.4788
           offset: 0.0
 
     autonomous_control:

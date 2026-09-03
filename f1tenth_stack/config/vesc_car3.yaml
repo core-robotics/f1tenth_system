@@ -1,0 +1,38 @@
+# Vehicle 3 calibration. Do not copy these values to another car.
+/**:
+  # general parameters shared by all vesc-related nodes
+  ros__parameters:
+    # erpm = speed_to_erpm_gain * speed (metres/second) + speed_to_erpm_offset
+    speed_to_erpm_gain: 4185.0
+    speed_to_erpm_offset: 1.0
+
+    # Per-car asymmetric steering calibration.
+    steering_angle_to_servo_gain_left: -1.882
+    steering_angle_to_servo_gain_right: -1.882
+    # vesc_to_odom still requires the unsplit gain to estimate steering angle.
+    steering_angle_to_servo_gain: -1.0325
+    steering_angle_to_servo_offset: 0.52
+
+    port: /dev/ttyMOTOR
+    duty_cycle_min: 0.0
+    duty_cycle_max: 1.0
+    current_min: 0.0
+    current_max: 100.0
+    brake_min: -20000.0
+    brake_max: 200000.0
+    speed_min: -60000.0
+    speed_max: 600000.0
+    position_min: 0.0
+    position_max: 0.0
+    servo_min: 0.01
+    servo_max: 0.99
+
+vesc_to_odom_node:
+  ros__parameters:
+    speed_to_erpm_gain: 4185.0
+    odom_frame: odom
+    base_frame: base_link
+    # Do not declare publish_tf here. The launch argument publish_odom_tf owns it:
+    # false for normal localization, true only while creating a SLAM map.
+    use_servo_cmd_to_calc_angular_velocity: true
+    wheelbase: .324

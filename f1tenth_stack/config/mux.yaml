@@ -2,10 +2,17 @@ ackermann_mux:
   ros__parameters:
     topics:
       navigation:
-        topic   : input_mux/drive
+        topic   : drive
+        timeout : 0.2
+        priority: 10
+      joystick:
+        topic   : teleop
         timeout : 0.2
         priority: 100
-      joystick:
-        topic   : input_mux/joy
-        timeout : 0.2
+    locks:
+      manual_control:
+        topic   : manual_control
+        timeout : 0.5
+        # Mask navigation/MPPI (priority 10), but keep joystick (priority 100)
+        # eligible while manual mode is enabled.
         priority: 100

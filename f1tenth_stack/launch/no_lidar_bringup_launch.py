@@ -1,6 +1,6 @@
 # MIT License
 
-# Copyright (c) 2020 Hongrui Zheng
+# Copyright (c) 2025 Hongrui Zheng
 
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@
 
 from launch import LaunchDescription
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 from launch.substitutions import Command
 from launch.substitutions import LaunchConfiguration
 from launch.actions import DeclareLaunchArgument
@@ -35,11 +36,6 @@ def generate_launch_description():
         get_package_share_directory('f1tenth_stack'),
         'config',
         'joy_teleop.yaml'
-    )
-    vesc_config = os.path.join(
-        get_package_share_directory('f1tenth_stack'),
-        'config',
-        'vesc.yaml'
     )
     sensors_config = os.path.join(
         get_package_share_directory('f1tenth_stack'),
@@ -58,8 +54,15 @@ def generate_launch_description():
         description='Descriptions for joy and joy_teleop configs')
     vesc_la = DeclareLaunchArgument(
         'vesc_config',
-        default_value=vesc_config,
-        description='Descriptions for vesc configs')
+        description=(
+            'Required vehicle-specific VESC config. Select vesc_car3.yaml or '
+            'vesc_car4.yaml explicitly; there is no safe cross-vehicle default.'))
+    publish_odom_tf_la = DeclareLaunchArgument(
+        'publish_odom_tf',
+        default_value='false',
+        description=(
+            'Publish odom -> base_link from vesc_to_odom. Enable for SLAM '
+            'mapping; keep false when another node owns that transform.'))
     sensors_la = DeclareLaunchArgument(
         'sensors_config',
         default_value=sensors_config,
@@ -69,7 +72,13 @@ def generate_launch_description():
         default_value=mux_config,
         description='Descriptions for ackermann mux configs')
 
-    ld = LaunchDescription([joy_la, vesc_la, sensors_la, mux_la])
+    ld = LaunchDescription([
+        joy_la,
+        vesc_la,
+        publish_odom_tf_la,
+        sensors_la,
+        mux_la,
+    ])
 
     joy_node = Node(
         package='joy',
@@ -78,8 +87,8 @@ def generate_launch_description():
         parameters=[LaunchConfiguration('joy_config')]
     )
     joy_teleop_node = Node(
-        package='joy_teleop',
-        executable='joy_teleop',
+        package='f1tenth_stack',
+        executable='joy_toggle_teleop',
         name='joy_teleop',
         parameters=[LaunchConfiguration('joy_config')]
     )
@@ -93,7 +102,13 @@ def generate_launch_description():
         package='vesc_ackermann',
         executable='vesc_to_odom_node',
         name='vesc_to_odom_node',
-        parameters=[LaunchConfiguration('vesc_config')]
+        parameters=[
+            LaunchConfiguration('vesc_config'),
+            {
+                'publish_tf': ParameterValue(
+                    LaunchConfiguration('publish_odom_tf'), value_type=bool)
+            },
+        ]
     )
     vesc_driver_node = Node(
         package='vesc_driver',
@@ -101,24 +116,12 @@ def generate_launch_description():
         name='vesc_driver_node',
         parameters=[LaunchConfiguration('vesc_config')]
     )
-    throttle_interpolator_node = Node(
-        package='f1tenth_stack',
-        executable='throttle_interpolator',
-        name='throttle_interpolator',
-        parameters=[LaunchConfiguration('vesc_config')]
-    )
-    urg_node = Node(
-        package='urg_node',
-        executable='urg_node_driver',
-        name='urg_node',
-        parameters=[LaunchConfiguration('sensors_config')]
-    )
     ackermann_mux_node = Node(
         package='ackermann_mux',
         executable='ackermann_mux',
         name='ackermann_mux',
         parameters=[LaunchConfiguration('mux_config')],
-        remappings=[('ackermann_drive_out', 'ackermann_cmd')]
+        remappings=[('ackermann_cmd_out', 'ackermann_drive')]
     )
     static_tf_node = Node(
         package='tf2_ros',
@@ -128,14 +131,12 @@ def generate_launch_description():
     )
 
     # finalize
-    # ld.add_action(joy_node)
-    # ld.add_action(joy_teleop_node)
-    # ld.add_action(ackermann_to_vesc_node)
-    # ld.add_action(vesc_to_odom_node)
-    # ld.add_action(vesc_driver_node)
-    # ld.add_action(throttle_interpolator_node)
-    ld.add_action(urg_node)
-    # ld.add_action(ackermann_mux_node)
-    # ld.add_action(static_tf_node)
+    ld.add_action(joy_node)
+    ld.add_action(joy_teleop_node)
+    ld.add_action(ackermann_to_vesc_node)
+    ld.add_action(vesc_to_odom_node)
+    ld.add_action(vesc_driver_node)
+    ld.add_action(ackermann_mux_node)
+    ld.add_action(static_tf_node)
 
     return ld

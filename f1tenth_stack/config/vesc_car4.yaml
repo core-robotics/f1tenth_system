@@ -1,0 +1,79 @@
+# Vehicle 4 calibration. Do not copy these values to another car.
+/**:
+  # general parameters shared by all vesc-related nodes
+  ros__parameters:
+    # erpm (electrical rpm) = speed_to_erpm_gain * speed (meters / second) + speed_to_erpm_offset
+    # speed_to_erpm_gain: 4800.0 #4800.0 3100.0
+    # speed_to_erpm_gain: 2937.0
+    speed_to_erpm_gain: 3479.53 # 4186.99
+    speed_to_erpm_offset: 0.0
+
+    # servo value (0 to 1) = steering_angle_to_servo_gain_{left,right} * steering angle (radians)
+    #                        + steering_angle_to_servo_offset
+    # Left/right are measured separately because the linkage is not symmetric. These are
+    # per-car calibration -- do not copy them to another car.
+    steering_angle_to_servo_gain_left: -1.05417 # 0.4788 rad (true max) -> 0.01, full servo range
+    steering_angle_to_servo_gain_right: -1.34250 # 0.4788 rad (true max) -> 0.99, full servo range
+    # Still required: vesc_to_odom declares this one (it inverts the servo command to
+    # estimate steering angle for angular velocity). Only ackermann_to_vesc moved to the
+    # left/right pair. Removing it aborts vesc_to_odom_node on startup.
+    steering_angle_to_servo_gain: -1.0
+    steering_angle_to_servo_offset: 0.44105
+    # R=66.25
+    # steer = 0.4788
+
+    port: /dev/sensors/vesc
+    duty_cycle_min: 0.0
+    duty_cycle_max: 1.0
+    current_min: 0.0
+    current_max: 100.0
+    brake_min: -20000.0
+    brake_max: 200000.0
+    speed_min: -60000.0
+    speed_max: 600000.0
+    position_min: 0.0
+    position_max: 0.0
+    servo_min: 0.01
+    servo_max: 0.99
+
+# No longer needed, all parameters are shared
+# ackermann_to_vesc_node:
+#   ros__parameters:
+
+vesc_to_odom_node:
+  ros__parameters:
+    # Plain positive gain, matching the command path above. This was temporarily negative
+    # to cancel a hardcoded negation in vesc_to_odom.cpp -- it computed speed as
+    # (-state.speed - offset) / gain, which does not apply to this car: driving forward
+    # commands about +2200 eRPM and the VESC reports about +2664, both positive, so that
+    # negation made /odom report negative while moving forward and drove MCL's estimate
+    # backwards along the heading. The negation is now gone from the source (ported from
+    # the 3호차 driver set), so the sign here goes back to positive. Keep the two in step:
+    # if the source ever reintroduces the negation, this must go negative again.
+    speed_to_erpm_gain: 3479.53 # 3806.35
+    odom_frame: odom
+    base_frame: base_link
+    # publish_tf is intentionally omitted here. vesc_to_odom.cpp defaults it to
+    # false, while bringup_launch.py can override it at node startup with
+    # publish_odom_tf:=true for SLAM mapping.
+    use_servo_cmd_to_calc_angular_velocity: true
+    # car wheelbase is about 25cm
+    wheelbase: .324
+
+# No longer needed, all parameters are shared
+# vesc_driver:
+#   ros__parameters:
+
+# throttle_interpolator:
+#   ros__parameters:
+#     rpm_input_topic: unsmoothed_speed
+#     rpm_output_topic: commands/motor/speed
+#     servo_input_topic: unsmoothed_position
+#     servo_output_topic: commands/servo/position
+
+#     # servo smoother - limits acceleration and smooths anything above limit
+#     max_acceleration: 5.0 # meters/second^2
+#     throttle_smoother_rate: 75.0 # messages/sec
+#     # servo smoother - limits rotation speed and smooths anything above limit
+#     max_servo_speed: 3.2 # radians/second
+#     servo_smoother_rate: 75.0 # messages/sec
